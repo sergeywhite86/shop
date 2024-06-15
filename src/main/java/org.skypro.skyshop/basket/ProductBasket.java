@@ -4,6 +4,7 @@ import org.skypro.skyshop.product.Product;
 
 
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class ProductBasket {
@@ -21,16 +22,17 @@ public class ProductBasket {
     }
 
     public int costBasket() {
-        if(currentIndex == 0) return 0;
-        return Arrays.stream(products).mapToInt(Product::getPrice).sum();
+        if (currentIndex == 0) return 0;
+        return Arrays.stream(products).filter(Objects::nonNull).mapToInt(Product::getPrice).sum();
     }
 
     public void printProducts() {
         if (currentIndex == 0) {
             System.out.println("В корзине пусто");
         } else {
-            Arrays.stream(products).forEach(p -> System.out.printf("%s : %d \n", p.getName(), p.getPrice()));
+            Arrays.stream(products).filter(Objects::nonNull).forEach(System.out::println);
             System.out.printf("Итого : %d \n", costBasket());
+            System.out.printf("Специальных товаров : %d \n",countSpecialProducts());
         }
     }
 
@@ -43,4 +45,9 @@ public class ProductBasket {
         Arrays.fill(products, null);
         currentIndex = 0;
     }
+
+    public int countSpecialProducts(){
+        return (int) Arrays.stream(products).filter(Objects::nonNull).filter(Product::isSpecial).count();
+    }
+
 }
