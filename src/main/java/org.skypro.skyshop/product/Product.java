@@ -8,6 +8,10 @@ public abstract class Product implements Searchable {
 
 
     public Product(String name) {
+
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
         this.name = name;
     }
 
@@ -26,11 +30,10 @@ public abstract class Product implements Searchable {
     }
 
 
-
     public abstract boolean isSpecial();
 
 
-    public abstract int getPrice() ;
+    public abstract int getPrice();
 
     @Override
     public String toString() {
