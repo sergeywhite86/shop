@@ -1,24 +1,49 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.basket.ProductBasket;
+
+import org.skypro.skyshop.exception.BestResultNotFound;
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.product.info.SearchEngine;
+
 
 public class App {
     public static void main(String[] args) {
-        ProductBasket productBasket = new ProductBasket();
-        productBasket.addProduct(new Product("Apple",  100));
-        productBasket.addProduct(new Product("Banana", 200));
-        productBasket.addProduct(new Product("Orange", 300));
-        productBasket.addProduct(new Product("Pear", 400));
-        productBasket.addProduct(new Product("Water", 500));
-        productBasket.addProduct(new Product("Grape", 600));
-        System.out.println(productBasket.costBasket());
-        productBasket.printProducts();
-        System.out.println(productBasket.isHaveProduct("Appl"));
-        productBasket.clean();
-        productBasket.printProducts();
-        System.out.println(productBasket.costBasket());
-        System.out.println(productBasket.isHaveProduct("A"));
+        try {
+            Product product1 = new SimpleProduct(" ", 100);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        try {
+            Product product2 = new DiscountedProduct("water", 100, 0);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        try {
+            Product product3 = new DiscountedProduct("orange", 101, 50);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
 
+        SearchEngine searchEngine = new SearchEngine(8);
+        Product product1 = new DiscountedProduct("appleappple", 10, 50);
+        Product product2 = new SimpleProduct("appleappleapple", 100);
+        Product product3 = new FixPriceProduct("sugar");
+        searchEngine.add(product1);
+        searchEngine.add(product2);
+        searchEngine.add(product3);
+
+        try {
+            System.out.println(searchEngine.getSearchTherm("z"));
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            System.out.println(searchEngine.getSearchTherm("a"));
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
