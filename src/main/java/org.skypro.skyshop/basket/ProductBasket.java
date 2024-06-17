@@ -3,51 +3,50 @@ package org.skypro.skyshop.basket;
 import org.skypro.skyshop.product.Product;
 
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
 public class ProductBasket {
 
-    private final int capacity = 5;
-    private final Product[] products = new Product[capacity];
-    private int currentIndex = 0;
+    private final List <Product> products = new ArrayList<>();
+
 
     public void addProduct(Product product) {
-        if (currentIndex < products.length) {
-            products[currentIndex] = product;
-            currentIndex++;
-        } else System.out.println("Невозможно добавить продукт");
-
+       products.add(product);
     }
 
     public int costBasket() {
-        if (currentIndex == 0) return 0;
-        return Arrays.stream(products).filter(Objects::nonNull).mapToInt(Product::getPrice).sum();
+        if (products.isEmpty()) return 0;
+        return products.stream().mapToInt(Product::getPrice).sum();
     }
 
     public void printProducts() {
-        if (currentIndex == 0) {
+        if (products.isEmpty()) {
             System.out.println("В корзине пусто");
         } else {
-            Arrays.stream(products).filter(Objects::nonNull).forEach(System.out::println);
+            products.forEach(System.out::println);
             System.out.printf("Итого : %d \n", costBasket());
             System.out.printf("Специальных товаров : %d \n",countSpecialProducts());
         }
     }
 
     public boolean isHaveProduct(String productName) {
-        if (currentIndex == 0) return false;
-        return Arrays.stream(products).anyMatch(p -> p.getName().equals(productName));
+        if (products.isEmpty()) return false;
+        return products.stream().anyMatch(p -> p.getName().equals(productName));
     }
 
     public void clean() {
-        Arrays.fill(products, null);
-        currentIndex = 0;
+        products.clear();
     }
 
     public int countSpecialProducts(){
-        return (int) Arrays.stream(products).filter(Objects::nonNull).filter(Product::isSpecial).count();
+        return (int) products.stream().filter(Objects::nonNull).filter(Product::isSpecial).count();
     }
 
+    public List<Product> deleteProduct(String productName) {
+        products.removeIf(p -> p.getName().equals(productName));
+        return products;
+    }
 }

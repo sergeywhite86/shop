@@ -2,35 +2,27 @@ package org.skypro.skyshop.product.info;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SearchEngine {
 
-    private final Searchable[] arrSearchElements;
-    private int index = 0;
+    private final List<Searchable> arrSearchElements;
 
-    public SearchEngine(int size) {
-        arrSearchElements = new Searchable[size];
+
+    public SearchEngine() {
+        arrSearchElements = new ArrayList<>();
     }
 
-    public Searchable[] search(String text) {
-        Searchable[] searchElements = new Searchable[5];
-        int index = 0;
-        for (Searchable searchable : arrSearchElements) {
-            if (searchable == null) break;
-            if (searchable.searchTerm().contains(text)) {
-                searchElements[index] = searchable;
-                index++;
-                if (index == 4) break;
-            }
-        }
-        return searchElements;
+    public List<Searchable> search(String text) {
+
+        return arrSearchElements.stream().filter(e -> e.searchTerm().equals(text)).toList();
     }
 
     public void add(Searchable searchElement) {
-        arrSearchElements[index] = searchElement;
-        index++;
+        arrSearchElements.add(searchElement);
     }
 
     public Searchable getSearchTherm(String text) throws BestResultNotFound {
@@ -38,7 +30,6 @@ public class SearchEngine {
         Map<Searchable, Integer> map = new HashMap<>();
         int maxCount = 0;
         for (Searchable searchElement : arrSearchElements) {
-            if (searchElement == null) break;
             int count = 0;
             int index = 0;
             int indexSubString = searchElement.searchTerm().indexOf(text, index);
