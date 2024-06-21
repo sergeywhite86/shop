@@ -1,4 +1,4 @@
-package org.skypro.skyshop.product.info;
+package org.skypro.skyshop.service;
 
 public final class Article implements Searchable{
 

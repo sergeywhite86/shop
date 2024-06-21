@@ -4,49 +4,74 @@ import org.skypro.skyshop.product.Product;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 
 public class ProductBasket {
 
-    private final List <Product> products = new ArrayList<>();
+    private final Map<String, List<Product>> products = new HashMap<>();
 
 
     public void addProduct(Product product) {
-       products.add(product);
+        if (!products.containsKey(product.getName())) {
+            List<Product> productsList = new ArrayList<>();
+            productsList.add(product);
+            products.put(product.getName(), productsList);
+        } else {
+            products.get(product.getName()).add(product);
+        }
     }
 
     public int costBasket() {
         if (products.isEmpty()) return 0;
-        return products.stream().mapToInt(Product::getPrice).sum();
+        int total = 0;
+        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
+            for (Product product : entry.getValue()) {
+                total += product.getPrice();
+            }
+        }
+        return total;
     }
 
     public void printProducts() {
         if (products.isEmpty()) {
             System.out.println("В корзине пусто");
         } else {
-            products.forEach(System.out::println);
+            for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
+                for (Product product : entry.getValue()) {
+                    System.out.println(product);
+                }
+            }
+            //  products.forEach(System.out::println);
+
             System.out.printf("Итого : %d \n", costBasket());
-            System.out.printf("Специальных товаров : %d \n",countSpecialProducts());
+            System.out.printf("Специальных товаров : %d \n", countSpecialProducts());
         }
     }
 
     public boolean isHaveProduct(String productName) {
         if (products.isEmpty()) return false;
-        return products.stream().anyMatch(p -> p.getName().equals(productName));
+        return products.keySet().stream().anyMatch(key -> key.equals(productName));
     }
 
     public void clean() {
         products.clear();
     }
 
-    public int countSpecialProducts(){
-        return (int) products.stream().filter(Objects::nonNull).filter(Product::isSpecial).count();
+    public int countSpecialProducts() {
+        int count = 0;
+        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
+            for (Product product : entry.getValue()) {
+                if (product.isSpecial()) count++;
+            }
+        }
+        return count;
     }
 
-    public List<Product> deleteProduct(String productName) {
-        products.removeIf(p -> p.getName().equals(productName));
+    public Map<String, List<Product>> deleteProduct(String productName) {
+        products.remove(productName);
         return products;
     }
 }
