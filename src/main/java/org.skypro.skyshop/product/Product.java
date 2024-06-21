@@ -1,7 +1,9 @@
 package org.skypro.skyshop.product;
 
+import lombok.Data;
 import org.skypro.skyshop.service.Searchable;
 
+@Data
 public abstract class Product implements Searchable {
 
     private final String name;
@@ -38,5 +40,10 @@ public abstract class Product implements Searchable {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Searchable o) {
+        return Integer.compare(o.getName().length(), this.getName().length());
     }
 }

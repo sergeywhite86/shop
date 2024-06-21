@@ -1,5 +1,8 @@
 package org.skypro.skyshop.service;
 
+import lombok.Data;
+
+@Data
 public final class Article implements Searchable{
 
    private final String name;
@@ -30,4 +33,9 @@ public final class Article implements Searchable{
         return name;
     }
 
+
+    @Override
+    public int compareTo(Searchable o) {
+        return Integer.compare(o.getName().length(), this.getName().length());
+    }
 }

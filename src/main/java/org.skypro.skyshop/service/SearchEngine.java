@@ -2,37 +2,34 @@ package org.skypro.skyshop.service;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SearchEngine {
 
-    private final Map<String, Searchable> searchableMap;
+    private final Set< Searchable> searchableSet;
 
 
     public SearchEngine() {
-        searchableMap = new HashMap<>();
+        searchableSet = new HashSet<>();
     }
 
-    public Map<String, Searchable> search(String productName) {
-        Map<String, Searchable> resultMap = new HashMap<>();
-        if (searchableMap.containsKey(productName)) {
-            resultMap.put(productName, searchableMap.get(productName));
-            return resultMap;
+    public Searchable search(String productName) {
+        if (containsProductByName(productName)) {
+            return getProductByName(productName);
         }
-        return resultMap;
+        return null;
     }
 
     public void add(Searchable searchElement) {
-        searchableMap.put(searchElement.getName(), searchElement);
+        searchableSet.add(searchElement);
     }
 
-    public Map<String,Searchable> getSearchTherm(String text) throws BestResultNotFound {
+    public Set<Searchable> getSearchTherm(String text) throws BestResultNotFound {
 
-        Map<String, Searchable> map = new TreeMap<>();
+        Set<Searchable> set = new TreeSet<>();
         int maxCount = 0;
-        for (String searchElement : searchableMap.keySet()) {
+        List<String> stringList = searchableSet.stream().map(Searchable::getName).toList();
+        for (String searchElement : stringList) {
             int count = 0;
             int index = 0;
             int indexSubString = searchElement.indexOf(text, index);
@@ -41,12 +38,19 @@ public class SearchEngine {
                 count++;
                 index = index + text.length();
                 indexSubString = searchElement.indexOf(text, index);
-                map.put(searchElement, searchableMap.get(searchElement));
+                set.add(getProductByName(searchElement));
                 if (count > maxCount) maxCount = count;
             }
         }
         if (maxCount != 0) {
-            return map;
+            return set;
         } else throw new BestResultNotFound(text);
+    }
+
+    private boolean containsProductByName(String searchElement) {
+        return searchableSet.stream().anyMatch(searchable -> searchable.getName().equals(searchElement));
+    }
+    private Searchable getProductByName(String searchElement) {
+        return searchableSet.stream().filter(searchable -> searchable.getName().equals(searchElement)).findFirst().orElse(null);
     }
 }

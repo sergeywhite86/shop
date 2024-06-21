@@ -8,6 +8,7 @@ import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.service.Article;
 import org.skypro.skyshop.service.SearchEngine;
 
 
@@ -29,7 +30,7 @@ public class App {
 
         System.out.println("_________________");
         Product product5 = new SimpleProduct("apple",55);
-        Product product6 = new SimpleProduct("appl",58);
+        Product product6 = new SimpleProduct("app",58);
         SearchEngine searchEngine = new SearchEngine();
         searchEngine.add(product1);
         searchEngine.add(product2);
@@ -37,6 +38,15 @@ public class App {
         searchEngine.add(product4);
         searchEngine.add(product5);
         searchEngine.add(product6);
-        System.out.println(searchEngine.getSearchTherm("ap"));
+        System.out.println(searchEngine.getSearchTherm("app"));
+
+        Article article1 = new Article("text11","ccdvevr");
+        Article article2 = new Article("text211","ccdvevr");
+        Article article3 = new Article("text31111","ccdvevr");
+
+        searchEngine.add(article1);
+        searchEngine.add(article2);
+        searchEngine.add(article3);
+        System.out.println(searchEngine.getSearchTherm("text"));
     }
 }

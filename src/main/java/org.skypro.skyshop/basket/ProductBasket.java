@@ -44,7 +44,6 @@ public class ProductBasket {
                     System.out.println(product);
                 }
             }
-            //  products.forEach(System.out::println);
 
             System.out.printf("Итого : %d \n", costBasket());
             System.out.printf("Специальных товаров : %d \n", countSpecialProducts());
