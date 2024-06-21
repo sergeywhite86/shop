@@ -3,10 +3,7 @@ package org.skypro.skyshop.basket;
 import org.skypro.skyshop.product.Product;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class ProductBasket {
@@ -26,28 +23,18 @@ public class ProductBasket {
 
     public int costBasket() {
         if (products.isEmpty()) return 0;
-        int total = 0;
-        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
-            for (Product product : entry.getValue()) {
-                total += product.getPrice();
-            }
-        }
-        return total;
+        return products.values().stream().flatMap(Collection::stream).mapToInt(Product::getPrice).sum();
     }
 
     public void printProducts() {
         if (products.isEmpty()) {
             System.out.println("В корзине пусто");
         } else {
-            for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
-                for (Product product : entry.getValue()) {
-                    System.out.println(product);
-                }
-            }
-
-            System.out.printf("Итого : %d \n", costBasket());
-            System.out.printf("Специальных товаров : %d \n", countSpecialProducts());
+            products.values().stream().flatMap(Collection::stream).forEach(System.out::println);
         }
+
+        System.out.printf("Итого : %d \n", costBasket());
+        System.out.printf("Специальных товаров : %d \n", countSpecialProducts());
     }
 
     public boolean isHaveProduct(String productName) {
@@ -60,13 +47,7 @@ public class ProductBasket {
     }
 
     public int countSpecialProducts() {
-        int count = 0;
-        for (Map.Entry<String, List<Product>> entry : products.entrySet()) {
-            for (Product product : entry.getValue()) {
-                if (product.isSpecial()) count++;
-            }
-        }
-        return count;
+        return (int) products.values().stream().flatMap(Collection::stream).filter(Product::isSpecial).count();
     }
 
     public Map<String, List<Product>> deleteProduct(String productName) {
